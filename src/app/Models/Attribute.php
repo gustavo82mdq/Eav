@@ -2,8 +2,6 @@
 
 namespace Gustavo82mdq\Eav\app\Models;
 
-use Gustavo82mdq\Eav\app\Events\LoadTypesEvent;
-use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use Illuminate\Support\Facades\DB;
 use Gustavo82mdq\Eav\app\Models\EntityType;
@@ -12,7 +10,7 @@ class Attribute extends \Rinvex\Attributable\Models\Attribute
 {
     use CrudTrait;
 
-     /*
+        /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
@@ -43,13 +41,13 @@ class Attribute extends \Rinvex\Attributable\Models\Attribute
     public function getEntitiesAttribute()
     {
         $res = DB::table(config('rinvex.attributable.tables.attribute_entity'))->where('attribute_id', $this->getKey())->get()->pluck('entity_type')->toArray();
-        return EntityType::whereIn('id',$res)->get();
+        return EntityType::whereIn('id', $res)->get();
     }
 
-    public static function types(){
+    public static function types() {
         $types = app('rinvex.attributable.types')->all();
         $res = array();
-        foreach ($types as $type){
+        foreach ($types as $type) {
             $res[$type] = str_replace('.php', '', last(explode('\\', $type)));
         }
         return $res;
@@ -62,7 +60,7 @@ class Attribute extends \Rinvex\Attributable\Models\Attribute
     |--------------------------------------------------------------------------
     */
 
-    public function entity_types(){
+    public function entity_types() {
         return $this->belongsToMany('Gustavo82mdq\Eav\app\Models\EntityType', 'attribute_entity', 'attribute_id', 'entity_type');
     }
 

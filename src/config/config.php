@@ -5,10 +5,10 @@
  * Date: 22/05/17
  * Time: 09:30
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 return [
-    'tables' => [ // key => table_name
+    'tables' => [// key => table_name
         'entity_types' => 'entity_types',
     ],
     'default_namespace' => '\Eav\Models',

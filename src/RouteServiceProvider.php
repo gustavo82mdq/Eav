@@ -16,11 +16,11 @@ class RouteServiceProvider extends ServiceProvider
 {
     protected $namespace = 'Gustavo82mdq\Eav\app\Http\Controllers';
 
-    public function map(){
+    public function map() {
         $this->mapAdminroutes();
     }
 
-    protected function mapAdminRoutes(){
+    protected function mapAdminRoutes() {
         Route::middleware(['web', 'admin'])
             ->prefix('admin') // or use the prefix from CRUD config
             ->namespace($this->namespace.'\Admin')

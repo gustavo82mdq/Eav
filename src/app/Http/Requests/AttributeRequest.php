@@ -28,8 +28,9 @@ class AttributeRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
             'description' => 'nullable|string'
         ];
 
-        if ($this->method() == 'POST')
-            $rules['slug'] = 'required|alpha_dash|unique:'.config('rinvex.attributable.tables.attributes').',slug';
+        if ($this->method() == 'POST') {
+                    $rules['slug'] = 'required|alpha_dash|unique:'.config('rinvex.attributable.tables.attributes').',slug';
+        }
 
 
         return $rules;
