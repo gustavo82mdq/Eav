@@ -14,7 +14,7 @@ class EavServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(realpath(__DIR__.'/resources/views/vendor/backpack/base'), 'backpack',true);
+        $this->loadViewsFrom(realpath(__DIR__.'/resources/views/vendor/backpack/base'), 'backpack', true);
         if ($this->app->runningInConsole()) {
             // Load migrations
             $this->loadMigrationsFrom(__DIR__.'/database/migrations');
@@ -33,8 +33,8 @@ class EavServiceProvider extends ServiceProvider
     public function register()
     {
         // Merge config
-        $this->mergeConfigFrom(realpath(__DIR__ . '/config/config.php'), 'gustavo82mdq.eav');
-        $this->mergeConfigFrom(realpath(__DIR__ . '/config/filesystems.php'), 'filesystems.disks');
+        $this->mergeConfigFrom(realpath(__DIR__.'/config/config.php'), 'gustavo82mdq.eav');
+        $this->mergeConfigFrom(realpath(__DIR__.'/config/filesystems.php'), 'filesystems.disks');
         $this->app->register(\Backpack\Base\BaseServiceProvider::class);
         $this->app->register(\Backpack\CRUD\CrudServiceProvider::class);
         $this->app->register(\Rinvex\Attributable\Providers\AttributableServiceProvider::class);
@@ -62,13 +62,13 @@ class EavServiceProvider extends ServiceProvider
         return array('command.eav.publish', 'command.eav.create');
     }
 
-    protected function publishResources(){
+    protected function publishResources() {
         // publish views
         $this->publishes([__DIR__.'/resources/views/vendor/backpack/base' => resource_path('views/vendor/backpack/base')], 'views');
 
         // Publish config
         $this->publishes([
-            realpath(__DIR__ . '/config/config.php') => config_path('gustavo82mdq.eav.php'),
+            realpath(__DIR__.'/config/config.php') => config_path('gustavo82mdq.eav.php'),
         ], 'config');
 
         // Publish migrations
@@ -80,9 +80,9 @@ class EavServiceProvider extends ServiceProvider
 
     protected function loadViewsFrom($path, $namespace, $prepend = false)
     {
-            if (!$prepend)
-            parent::loadViewsFrom($path, $namespace);
-        else {
+            if (!$prepend) {
+                        parent::loadViewsFrom($path, $namespace);
+            } else {
             if (is_dir($appPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
                 $this->app['view']->addNamespace($namespace, $appPath);
             }

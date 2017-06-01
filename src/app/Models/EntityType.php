@@ -9,7 +9,7 @@ class EntityType extends Model
 {
     use CrudTrait;
 
-     /*
+        /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ class EntityType extends Model
     //protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-     protected $fillable = ['name', 'canonical_path', 'icon'];
+        protected $fillable = ['name', 'canonical_path', 'icon'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -35,7 +35,7 @@ class EntityType extends Model
         $this->setTable(config('gustavo82mdq.eav.tables.entity_type'));
     }
 
-    public function getIconAsHTML(){
+    public function getIconAsHTML() {
         return '<i class="fa '.$this->icon.'"></i>';
     }
 
@@ -45,7 +45,7 @@ class EntityType extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function attributes(){
+    public function attributes() {
         return $this->belongsToMany('Rinvex\Attributable\Models\Attribute');
     }
 

@@ -13,7 +13,7 @@ class AlterAttributeEntityTable extends Migration
      */
     public function up()
     {
-        Schema::table(config('rinvex.attributable.tables.attribute_entity'), function (Blueprint $table) {
+        Schema::table(config('rinvex.attributable.tables.attribute_entity'), function(Blueprint $table) {
             $table->integer('entity_type')->unsigned()->change();
 
             $table->foreign('entity_type')
@@ -29,7 +29,7 @@ class AlterAttributeEntityTable extends Migration
      */
     public function down()
     {
-        Schema::table('attribute_entity', function (Blueprint $table) {
+        Schema::table('attribute_entity', function(Blueprint $table) {
             $table->dropForeign('entity_type');
             $table->string('entity_type')->change();
         });
