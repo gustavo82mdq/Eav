@@ -13,7 +13,7 @@ class CreateEntityTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('gustavo82mdq.eav.tables.entity_types'), function (Blueprint $table) {
+        Schema::create(config('gustavo82mdq.eav.tables.entity_types'), function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('canonical_path');

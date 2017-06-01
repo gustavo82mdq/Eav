@@ -5,7 +5,6 @@ namespace Gustavo82mdq\Eav\app\Http\Controllers\Admin;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
-use Gustavo82mdq\Eav\app\Http\Requests\AttributeRequest as StoreRequest;
 use Gustavo82mdq\Eav\app\Http\Requests\AttributeRequest as UpdateRequest;
 use Gustavo82mdq\Eav\app\Models\Attribute;
 
@@ -20,7 +19,7 @@ class AttributeCrudController extends CrudController
         |--------------------------------------------------------------------------
         */
         $this->crud->setModel('Gustavo82mdq\Eav\app\Models\Attribute');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/attribute');
+        $this->crud->setRoute(config('backpack.base.route_prefix').'/attribute');
         $this->crud->setEntityNameStrings('attribute', 'attributes');
 
         $this->crud->model->getConnection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'text');

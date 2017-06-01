@@ -50,7 +50,7 @@ class Publish extends Command
 
         \Artisan::call("elfinder:publish");
 
-        foreach ($publishes as $publish){
+        foreach ($publishes as $publish) {
             \Artisan::call("vendor:publish", $publish);
             echo \Artisan::output();
         }

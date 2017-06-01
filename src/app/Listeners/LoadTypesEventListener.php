@@ -3,8 +3,6 @@
 namespace Gustavo82mdq\Eav\app\Listeners;
 
 use Gustavo82mdq\Eav\app\Events\LoadTypesEvent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 
 class LoadTypesEventListener
@@ -28,6 +26,6 @@ class LoadTypesEventListener
     public function handle(LoadTypesEvent $event)
     {
         $files = Storage::disk('root')->files(config('gustavo82mdq.eav.types_location'));
-        $event->types = array_merge($event->types,$files);
+        $event->types = array_merge($event->types, $files);
     }
 }

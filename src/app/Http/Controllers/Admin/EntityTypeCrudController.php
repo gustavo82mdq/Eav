@@ -3,7 +3,6 @@
 namespace Gustavo82mdq\Eav\app\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Gustavo82mdq\Eav\app\Http\Requests\EntityRequest as StoreRequest;
 use Gustavo82mdq\Eav\app\Http\Requests\EntityRequest as UpdateRequest;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +24,7 @@ class EntityTypeCrudController extends CrudController
         |--------------------------------------------------------------------------
         */
         $this->crud->setModel('Gustavo82mdq\Eav\app\Models\EntityType');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/entity_type');
+        $this->crud->setRoute(config('backpack.base.route_prefix').'/entity_type');
         $this->crud->setEntityNameStrings('entity type', 'entity types');
 
         /*
@@ -144,8 +143,8 @@ class EntityTypeCrudController extends CrudController
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
-        if (isset($this->crud->entry)){
-            Schema::create(strtolower(str_plural($this->crud->entry->name)), function (Blueprint $table) {
+        if (isset($this->crud->entry)) {
+            Schema::create(strtolower(str_plural($this->crud->entry->name)), function(Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('entity_type_id')->unsigned();
@@ -180,10 +179,13 @@ class EntityTypeCrudController extends CrudController
         );
     }
 
-    protected function rootNamespace(){
+    protected function rootNamespace() {
         return $this->getAppNamespace();
     }
 
+    /**
+     * @param string $rootNamespace
+     */
     protected function getDefaultNamespace($rootNamespace)
     {
         return $rootNamespace.config('gustavo82mdq.eav.default_namespace');
