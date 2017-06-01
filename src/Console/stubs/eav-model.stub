@@ -1,0 +1,119 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Entity;
+use Backpack\CRUD\CrudTrait;
+use Illuminate\Support\Facades\DB;
+use Rinvex\Attributable\Events\EntityWasSaved;
+use Rinvex\Attributable\Models\Attribute;
+use Rinvex\Attributable\Scopes\EagerLoadScope;
+use Rinvex\Attributable\Traits\Attributable;
+use Gustavo82mdq\Eav\app\Models\EntityType;
+use Illuminate\Database\Eloquent\Builder;
+
+class DummyClass extends Model
+{
+    use CrudTrait;
+    use Attributable {
+        bootIfNotBooted as protected bootIfNotBootedTraitFunction;
+    }
+
+    // Eager loading all the registered attributes
+    protected $with = ['eav'];
+    protected $fillable = ['entity_type_id'];
+
+    /**
+    * The "booting" method of the model.
+    *
+    * @return void
+    */
+    protected static function boot()
+    {
+        parent::boot();
+        app('rinvex.attributable.entities')->push(static::class);
+        static::addGlobalScope('entity_type', function (Builder $builder) {
+            $entity_type = EntityType::where('name', 'DummyClass')->first();
+            $builder->where('entity_type_id', $entity_type->id);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function bootIfNotBooted()
+    {
+        $this->bootIfNotBootedTraitFunction();
+        $this->fillable(array_merge($this->fillable, array_keys($this->attributes()->toArray())));
+    }
+
+
+    /**
+     * Booting the Attributable trait.
+     *
+     * @return void
+     */
+    public static function bootAttributable()
+    {
+        $models = array_merge([static::class], array_values(class_parents(static::class)));
+        $models = DB::table(config('gustavo82mdq.eav.tables.entity_types'))->whereIn('canonical_path', $models)->get()->pluck('id')->toArray();
+        $attributes = DB::table(config('rinvex.attributable.tables.attribute_entity'))->whereIn('entity_type', $models)->get()->pluck('attribute_id');
+        static::$entityAttributes = Attribute::whereIn('id', $attributes)->get()->keyBy('slug');
+
+        static::addGlobalScope(new EagerLoadScope());
+
+        static::saved(EntityWasSaved::class.'@handle');
+        static::deleted(static::class.'@EntityWasDeleted');
+    }
+
+    public function EntityWasDeleted(Entity $entity){
+        // We will initially check if the model is using soft deletes. If so,
+        // the attribute values will remain untouched as they should sill
+        // be available till the entity is truly deleted from database.
+        if (in_array(SoftDeletes::class, class_uses_recursive(get_class($entity))) && ! $entity->isForceDeleting()) {
+            return;
+        }
+
+        foreach ($entity->getEntityAttributes() as $attribute) {
+            if ($entity->relationLoaded($relation = $attribute->getAttribute('slug'))
+                && ($values = $entity->getRelationValue($relation)) && (($attribute->isCollection() && !$values->isEmpty()) || !empty($values))) {
+                // Calling the `destroy` method from the given $type model class name
+                // will finally delete the records from database if any was found.
+                // We'll just provide an array containing the ids to be deleted.
+                forward_static_call_array([$attribute->getAttribute('type'), 'destroy'], [$values->pluck('id')->toArray()]);
+            }
+        }
+    }
+
+    /**
+     * Set the entity attribute value.
+     *
+     * @param \Rinvex\Attributable\Models\Attribute $attribute
+     * @param mixed                                 $value
+     *
+     * @return $this
+     */
+    protected function setEntityAttributeValue(Attribute $attribute, $value)
+    {
+        if (! is_null($value) && ! $value instanceof Value) {
+            $model = $attribute->getAttribute('type');
+            $instance = new $model();
+            if ($this->getKey() == null)
+                $this->save();
+            $instance->setAttribute('entity_id', $this->getKey());
+            $instance->setAttribute('entity_type', get_class($this));
+            $instance->setAttribute($attribute->getForeignKey(), $attribute->getKey());
+            $instance->setAttribute('content', $value);
+
+            $value = $instance;
+        }
+
+        return $this->setRelation($attribute->getAttribute('slug'), $value);
+    }
+
+    public function getEntityTypeIdAttribute(){
+        $entity_type = EntityType::where('name', 'DummyClass')->first();
+        return $entity_type->id;
+    }
+}
