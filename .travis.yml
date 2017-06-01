@@ -12,6 +12,4 @@ matrix:
 
 sudo: false
 
-install: travis_retry composer install --no-interaction --prefer-source
-
-script: vendor/bin/phpunit --coverage-clover=coverage.clover Test.php
+script: vendor/bin/phpunit --configuration phpunit.xml
