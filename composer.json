@@ -23,7 +23,7 @@
         "backpack/crud": "^3.2",
         "backpack/generators": "^1.1",
         "illuminate/support": "~5.1",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.*",
         "rinvex/attributes": "^0.0.3"
     },
     "require-dev": {
